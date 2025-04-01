@@ -27,6 +27,7 @@ module SmsCredits
     def self.calculate(message)
       if gsm7?(message)
         encoding = :gsm7
+        total_chars = message.length
         if message.length <= 160
           segments = 1
           chars_per_segment = 160
@@ -36,20 +37,21 @@ module SmsCredits
         end
       else
         encoding = :unicode
+        total_chars = message.encode('UTF-16BE').bytesize / 2.0
         if message.length <= 70
-          segments = 1
           chars_per_segment = 70
         else
-          segments = (message.length.to_f / 67).ceil
           chars_per_segment = 67
         end
+
+        segments = (total_chars.to_f / chars_per_segment).ceil
       end
 
       {
         encoding: encoding,
         segments: segments,
         chars_per_segment: chars_per_segment,
-        total_chars: message.length
+        total_chars:
       }
     end
   end
