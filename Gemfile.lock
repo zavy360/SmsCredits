@@ -20,6 +20,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.2)
+    rspec_junit_formatter (0.6.0)
+      rspec-core (>= 2, < 4, != 2.12.0)
 
 PLATFORMS
   arm64-darwin-23
@@ -27,6 +29,7 @@ PLATFORMS
 
 DEPENDENCIES
   rspec
+  rspec_junit_formatter
   sms_credits!
 
 BUNDLED WITH

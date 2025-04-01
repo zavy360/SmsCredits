@@ -1,0 +1,57 @@
+name: Release
+on:
+  push:
+    branches: [main]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Required for pushing tags
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.1'  # Change to your desired Ruby version
+          bundler-cache: true
+          cache-version: ${{ hashFiles('**/Gemfile.lock') }}
+      - name: Bump minor version
+        run: |
+          # This Ruby one-liner reads lib/sms_credits/version.rb,
+          # bumps the minor version and resets the patch version to 0,
+          # then writes the new version back.
+          ruby -e "content = File.read('lib/sms_credits/version.rb'); new_content = content.gsub(/VERSION = \"(\\d+)\\.(\\d+)\\.(\\d+)\"/) { |match| v = [$1.to_i, $2.to_i, $3.to_i]; v[1] += 1; v[2] = 0; \"VERSION = \\\"#{v.join('.') }\\\"\" }; File.write('lib/sms_credits/version.rb', new_content)"
+      - name: Get new version
+        id: get_version
+        run: |
+          version=$(ruby -r./lib/sms_credits/version.rb -e 'puts SmsCredits::VERSION')
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Commit version bump
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "[skip ci] Release v${{ steps.get_version.outputs.version }}"
+          add: "lib/sms_credits/version.rb"
+
+      - name: Create git tag
+        run: |
+          git tag v${{ steps.get_version.outputs.version }}
+          git push origin --tags
+
+      - name: Build gem
+        run: gem build sms_credits.gemspec
+
+      - name: Get gem file name
+        id: gem_file
+        run: |
+          gem_file=$(ls sms_credits-*.gem)
+          echo "gem_file=${gem_file}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release and Upload Gem
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          files: ${{ steps.gem_file.outputs.gem_file }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

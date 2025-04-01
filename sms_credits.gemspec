@@ -18,4 +18,5 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = Gem::Requirement.new(">= 2.4.0")
 
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rspec_junit_formatter"
 end
