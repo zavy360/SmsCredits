@@ -21,7 +21,7 @@ jobs:
           # This Ruby one-liner reads lib/sms_credits/version.rb,
           # bumps the minor version and resets the patch version to 0,
           # then writes the new version back.
-          ruby -e "content = File.read('lib/sms_credits/version.rb'); new_content = content.gsub(/VERSION = \"(\\d+)\\.(\\d+)\\.(\\d+)\"/) { |match| v = [$1.to_i, $2.to_i, $3.to_i]; v[1] += 1; v[2] = 0; \"VERSION = \\\"#{v.join('.') }\\\"\" }; File.write('lib/sms_credits/version.rb', new_content)"
+          ruby -e "content = File.read('lib/sms_credits/version.rb'); new_content = content.gsub(/VERSION = \"(\\d+)\\.(\\d+)\\.(\\d+)\"/) { |match| v = [\$1.to_i, \$2.to_i, \$3.to_i]; v[1] += 1; v[2] = 0; \"VERSION = \\\"#{v.join('.') }\\\"\" }; File.write('lib/sms_credits/version.rb', new_content)"
       - name: Get new version
         id: get_version
         run: |
