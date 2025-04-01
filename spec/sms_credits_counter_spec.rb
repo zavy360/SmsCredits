@@ -305,7 +305,7 @@ RSpec.describe SmsCredits::Counter do
         mixed_message = "Dear customer, your order #12345 has been shipped 🚚. It is expected to arrive by tomorrow. Thank you for shopping with us! 😊"
         result = described_class.calculate(mixed_message)
         expect(result[:encoding]).to eq(:unicode)
-        expect(result[:total_chars]).to eq(mixed_message.length)
+        expect(result[:total_chars]).to eq(mixed_message.length + 2)
         if result[:total_chars] > 70
           expect(result[:segments]).to be > 1
         else

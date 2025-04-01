@@ -22,6 +22,12 @@ RSpec.describe SmsCredits do
       expect(result).to eq(1)
     end
 
+    it 'counts emojis correctly' do
+      expect(::SmsCredits::Counter.calculate("😊😊")[:total_chars]).to eq(4)
+      expect(::SmsCredits::Counter.calculate("Ok thanks! 😊😊")[:total_chars]).to eq(15)
+      expect(described_class.count("Whoa 😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊")).to eq(2)
+    end
+
     it "transitions from one to multiple segments at 161 characters" do
       message1 = "a" * 160
       message2 = "a" * 161
