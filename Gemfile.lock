@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sms_credits (1.1.0)
+    sms_credits (1.2.0)
 
 GEM
   remote: https://rubygems.org/
