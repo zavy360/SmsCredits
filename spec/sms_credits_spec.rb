@@ -113,4 +113,29 @@ RSpec.describe SmsCredits do
       expect(result2).to eq(2)
     end
   end
+
+  context "sanitization" do
+    it 'sanitizes lookalike characters to GSM-7 equivalents' do
+      message = %Q(Welcome to the “world” of SMS! Here’s a bullet point: •. This message costs €1. Cancellation policy applies – https://www.example.com.au/cancellation-policy/cp\nSee you soon! 2016©)
+      sanitized_message = described_class.sanitize(message)
+
+      expect(sanitized_message).to be_a String
+      expect(sanitized_message).to include('"world"')
+      expect(sanitized_message).to include('*')
+      expect(sanitized_message).to include('EUR1')
+      expect(sanitized_message).to include('-')
+      expect(sanitized_message).to include('(c)')
+    end
+
+    it 'shows information about illegal characters that cant be sanitized' do
+      message = "Hello, this is a test message with illegal characters: 😊, ©, ™, and €."
+      info = described_class.info(message)
+
+      expect(info[:illegal_characters]).to include('😊')
+      expect(info[:sanitized_characters].sort).to eq(['©', '™', '€'].sort)
+      expect(info[:sanitized_message]).to include('Hello, this is a test message with illegal characters: 😊, (c), (tm), and EUR.')
+      expect(info[:encoding]).to eq(:unicode)
+      expect(info[:segments]).to eq(2)
+    end
+  end
 end
