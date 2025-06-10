@@ -137,5 +137,6 @@ RSpec.describe SmsCredits do
       expect(info[:encoding]).to eq(:unicode)
       expect(info[:segments]).to eq(2)
     end
+
   end
 end

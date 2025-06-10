@@ -18,6 +18,8 @@ module SmsCredits
       '•' => '*', # bullet point
       '»' => '>>', # right-pointing double angle quotation mark
       '«' => '<<', # left-pointing double angle quotation mark
+      ' ' => ' ', # non-breaking space
+      ' ' => ' ', # non-breaking space (HTML entity)
     }.freeze
 
     # Sanitize a message by replacing lookalike characters with their GSM-7 equivalents
