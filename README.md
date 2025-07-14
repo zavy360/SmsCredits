@@ -17,7 +17,7 @@ gem 'sms_credits'
 require 'sms_credits'
 
 message = "Your SMS message here"
-result = SmsCreditCounter::Counter.calculate(message)
+result = SmsCredits::Counter.calculate(message)
 puts "Encoding: #{result[:encoding]}"
 puts "Segments: #{result[:segments]}"
 puts "Characters per segment: #{result[:chars_per_segment]}"
@@ -29,8 +29,7 @@ Or, if you just need the number of segments:
 ```ruby
 require 'sms_credits'
 
-
-SmsCredits.count("Hello") == 1
-SmsCredits.count("Hello 😊") == 1
+SmsCredits.count("Hello") #=> 1
+SmsCredits.count("Hello 😊") #=> 1
 
 ```
